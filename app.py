@@ -10,7 +10,7 @@ pictureFolder = os.path.join('static','images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = pictureFolder
 
-@app.route('/identification',methods=['GET','POST'])
+@app.route('/identification',methods=['GET'])
 def identification():
     
     return render_template('identification.html')
@@ -90,7 +90,7 @@ def classification():
         plots = []
     return render_template('classification.html',Alg_Form = Alg_Form,accuracy = accuracy,lead_sentence=lead_sentence,plots=plots)
 
-@app.route('/prediction',methods=['GET','POST'])
+@app.route('/prediction',methods=['GET'])
 def prediction():
     cap1 = 'Table of signals before prediction'
     temp1 = before_predict_table()
@@ -103,7 +103,7 @@ def prediction():
     temp2 = temp2.to_dict('records')
     return render_template('prediction.html',colnames1=columnNames1,records1=temp1,colnames2=columnNames2,records2=temp2,cap1=cap1,cap2=cap2)
 
-@app.route('/',methods=['GET','POST'])
+@app.route('/',methods=['GET'])
 def welcome():
     return render_template('welcome.html')
 
