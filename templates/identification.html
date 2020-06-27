@@ -1,0 +1,122 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="content">
+ 
+  <h1><strong>Signal identification</strong></h1>
+  <h4>The purpose of signal identification is extracting the signals from spectrum and get their features for the next step like clustering or classification.</h4>
+  <h4>The workflow of signal identification can be divided in the steps below:</h4>
+  
+  <br>
+  <ol>
+    <li><h4>From raw data, create threshold for signal power by using anomalies detection methods.(for example box plot method).</h4></li>
+    <li><h4>From that threshold, create boolean matrix.</h4></li>
+    <li><h4>From boolean matrix, create black - white pictures. The white areas on picture represent signals and should be extracted to get features like duration, bandwidth, power, peaks number, max gradient.</h4></li>
+    <li><h4>Location of ISS at the time of receiving signals is also a good feature, it can be obtained from provided database from MarconISSta.</h4></li>
+  </ol>
+  <section>
+    <h2>1. Box plot method explanation.</h2>
+
+
+    <h4>An outlier is an observation that is numerically distant from the rest of the data.</h4>
+    <h4>When reviewing a box plot, an outlier is defined as a data point that is located outside the whiskers of the box plot.</h4>
+
+    
+    
+    <a href="https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51"><img src="../static/images/boxplot.PNG" alt="" ></a>
+      <br>
+      <br>
+    <h4>
+      - Calculate parameters:
+    </h4>
+    <h4>
+      Median (Q2/50th Percentile): the middle value of the dataset.
+    </h4>
+    <h4>
+      First quartile (Q1/25th Percentile): the middle number between the smalles number and the median of the dataset.
+      Third quartile (Q3/75th Percentile): the middle value between the median and the highest value of the dataset.<br>
+      Interquartile range (IQR): 25th to the 75th Percentile. (IQR = Q3 - Q1)<br>
+      - Calculate bounds <br>
+      Uper bound = Q3 + factor*IQR <br>
+      Lower bound = Q1 - factor*IQR  <br>
+      The factor can be selected equal 1, 1.5, 2. The selection is up to user. <br>
+      - The outliers are defined as the numbers outside the range between "lower bound" and "upper bound" <br>
+      <h4>Read more:</h4>
+      <a href="https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51">https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51</a>
+    </h4>
+  </section>
+<br>
+  <section>
+    <h2>2. Extracting signals by using OpenCV</h2>
+    <h4>The surface plot picture of one csv file can be seen below</h4>
+    <a href=""><img src="../static/images/2018-08-23T05-00-00_L_HIGH.csv.png" alt="" ></a>
+    <br>
+    <br>
+    <span class="arrow">&#x2193;</span>
+    
+    <h4>From the threshold, a black - white picture was created. Note that the picture is reversed from surface plot picture. </h4>
+    <a href=""><img src="../static/images/2018-08-23T05-00-00_L_HIGH_SW.csv.png" alt="" ></a>
+    <br>
+    <br>
+    <span class="arrow">&#x2193;</span>
+    <h4>There are still noises on black - white picture. Closing and Opening method in OpenCV can be used to remove noises</h4>
+    <h4>Closing black - white picture</h4>
+    <a href=""><img src="../static/images/2018-08-23T05-00-00_L_HIGH.csv_closed.png" alt="" ></a>
+    <br>
+    <br>
+    <span class="arrow">&#x2193;</span>
+    <h4>opening black - white picture</h4>
+    <a href=""><img src="../static/images/2018-08-23T05-00-00_L_HIGH.csv_opened.png" alt="" ></a>
+  </section>
+  <br>
+  <section>
+    <h2>3. Get features of each signal</h2>
+    <ol>
+      <li><h4>Each white area on picture represents a signal.</h4></li>
+      <li><h4>Draw a minimum rectangle over this white area in order to get duration and bandwidth of the signal.</h4></li>
+      <li><h4>Signal power, peaks number and max gradient can be extracted from matrix in raw data.</h4></li>
+      <li><h4>Location feature can be obtained from tle - two line element set data from given database.</h4></li>
+    </ol>
+  </section>
+</div>
+  <!-- <script type="text/javascript">
+    $(document).ready(function() {
+
+      $('#table_receiver').DataTable({
+        'buttons':[
+          'copy','csv','excel','pdf','print'
+        ]
+
+      });
+      if (typeof $('#table_receiver_wrapper') != "undefined") {
+          $("#table_caption").css("display", "block");
+      }
+      else{
+        $("#table_caption").css("display", "none");
+      }
+
+    } );
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      $('#table_probs').DataTable({
+        'buttons':[
+          'copy','csv','excel','pdf','print'
+        ]
+
+      });
+
+
+    } );
+
+    company_name = document.getElementById('company_name');
+    factor = document.getElementById('factor');
+    type = document.getElementById('type');
+
+    company_name.style.width = '350px';
+    factor.style.width = '350px';
+    type.style.width = '350px';
+  </script> -->
+
+{% endblock %}

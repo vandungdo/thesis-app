@@ -1,0 +1,45 @@
+<div class="sidebar" data="blue">
+
+  <!-- Sidebar -->
+  <div class="sidebar-wrapper" >
+    <div class="logo" >
+      <a href="/" class="simple-text logo-normal">VDD - Thesis </a>
+    </div>
+    <ul class="nav">
+        <li class="active ">
+          <a href="{{url_for('welcome')}}" ><i class='far fa-address-card'></i>
+          <h4>Introduction</h4>
+          </a>
+        </li>
+        <li class="active ">
+          <a href="{{ url_for('identification') }}" ><i class='far fa-map'></i>
+          <h4>Signal Identification</h4>
+          </a>
+        </li>
+
+        <li class="active ">
+          <a href="{{ url_for('clustering') }}" ><i class='far fa-map'></i>
+          <h4>Signal Clustering</h4>
+          </a>
+        </li>
+
+        <li class="active ">
+          <a href="{{ url_for('classification') }}" ><i class='far fa-map'></i>
+          <h4>Signal Classification</h4>
+          </a>
+        </li>
+        <li class="active ">
+          <a href="{{ url_for('prediction') }}" ><i class='far fa-map'></i>
+          <h4>Example Prediction</h4>
+          </a>
+        </li>
+
+      </ul>
+      <!-- <a href="welcome" class="list-group-item list-group-item-action bg-light"><i class='far fa-address-card'></i>&nbsp; Welcome</a>
+      <a href="/Subscription" class="list-group-item list-group-item-action bg-light"><i class='far fa-map'></i>&nbsp; Subscription Plan</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"> <i class='fas fa-chart-line'></i>&nbsp; Partner Discovery</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class='fas fa-sync'></i>&nbsp;Cashflow Forecasting</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class='far fa-handshake'></i>&nbsp;Transaction Network</a>
+      <a href="/fraud_detection" class="list-group-item list-group-item-action bg-light"><i class='fas fa-search-dollar'></i>&nbsp;Fraud Detection</a> -->
+    </div>
+  </div>

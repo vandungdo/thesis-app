@@ -1,0 +1,100 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="content">
+  <h1><strong>Clustering</strong></h1>
+  <h4>The purpose of clustering is to make classes/clusters for signals as input for classification model later on.</h4>
+  <h4>The best algorithm for this problem is DBSCAN, because this algorithm serves very good for unknown number of cluster and potential overlapping classes clustering problem.</h4>
+  <h4>The results from clustering was analyzed and saved in csv file to be used as input for classification. </h4>
+  <br>
+  <section>
+    <h2><strong>1. DBSCAN algorithm explanation</strong> </h2>
+    <h4>DBSCAN is a density-based clustering non-parametric algorithm: given a set of points in some space, it groups together points that are closely packed together (points with many nearby neighbors), 
+      marking as outliers points that lie alone in low-density regions (whose nearest neighbors are too far away).</h4>
+    <h4>By definition of core points, border points and outliers. The algorithm sets step by step the data points in individual group</h4>
+    <h4>Consider a set of points in some space to be clustered. Let &epsilon; be a parameter specifying the radius of a neighborhood with respect to some point. For the purpose of DBSCAN clustering, the points are classified as core points, (density-)reachable points/border points and outliers, as follows:</h4>
+    <ul>
+      <li><h4>A point p is a core point if at least minPts points are within distance &epsilon; of it (including p).</h4></li>
+      <li><h4>A point q is directly reachable from p if point q is within distance &epsilon; from core point p. Points are only said to be directly reachable from core points.</h4></li>
+      <li><h4>A point q is reachable from p if there is a path p1, ..., pn with p1 = p and pn = q, where each pi+1 is directly reachable from pi. Note that this implies that the initial point and all points on the path must be core points, with the possible exception of q.</h4></li>
+      <li><h4>All points not reachable from any other point are outliers or noise points.</h4></li>
+    </ul>
+  </section>
+  <h4><strong>The workflow of DBSCAN can be explained by the picture below</strong></h4>
+  <br>
+  <br>
+  <img src="/static/images/dbscan.png" alt="">
+  <br>
+  <br>
+  <section>
+    <h2><strong>2. The results from clustering MarconISSta data set</strong> </h2>
+
+  </section>
+
+  <h4>After merging we have only more than 20 classes. You can see many classes are not appeared anymore. The reason is they are merged in other class. <br>
+    The name of classes we can have later instead of the numbers. </h4>
+    <h4>The filters below help better to check the results.</h4>
+    <h4>below are some instructions as user guide.</h4>
+    <ul>
+      <li ><h4>To see all the signals in a individual label, you can choose in label dropdown menu , and let all other fields as default . And click on show.</h4> 
+         <h4>Note that all defaults will not work . Because the data is big and takes too long time to render on web. So you need to choose one individual label .</h4>
+         <h4>Hour time is set as default -1 with meaning hour time field is not as a filter.</h4>
+      </li>
+      
+      <li ><h4>To see results corresponding with day and hour time you can choose from all the dropdown menus  and click on show.</h4> 
+         <h4>Choosing 'all labels' you can see all labels in chosen time range. </h4>
+        <h4>The chosen csv data from 23/08/2018 so you can choose the day from that day. To be more precise, you can see the file "raw_csv_name.csv" file</h4> 
+      </li>
+      
+    
+    </ul>
+    <form method=post action="">
+        <div class="form-group">
+          <table  >
+            {% for field in newLabelForm %}
+              <tr>
+              <td>{{ field.label }}</td><td>{{ field }}</td>
+    
+              </tr>
+            {% endfor %}
+          </table>
+          
+        </div>
+      </form>
+    
+      <table id="tb" class="display" style="width:50%">
+          <thead>
+              <tr>
+                  {% for col in colnames1 %}
+                  <th>{{ col }}</th>
+                  {% endfor %}
+              </tr>
+          </thead>
+          <tbody>
+              {% for record in records1 %}
+              <tr>
+                  {% for col in colnames1 %}
+                  <td>{{ record[col] }}</td>
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    
+      {% for p1 in pictures1 %}
+        <img src="{{p1}}" alt="">
+      {% endfor %}
+</div>
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('#tb').DataTable(
+      {
+        "scrollY":        "400px",
+        "scrollCollapse": true,
+        "paging":         false,
+        "scrollX":        true
+      }
+    );
+  } );
+</script>
+
+{% endblock %}

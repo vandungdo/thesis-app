@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="content">
+  <h1><strong>Signal classification</strong></h1>
+  <h4>The purpose of signal classification is to build a model that learn from labeled data from clustering step.
+    then use that model to predict/classify all signals in the whole data set.
+  </h4>
+  <h4>The labeled data from clustering step has more than 20 classes. That means, the problem
+    is multiclass classification. There are many algorithms, that serve well in multiclass classification such as 
+    Support Vector Machine (SVM), Decision Tree, Naive Bayes, Random Forest.
+  </h4>
+  <h4>Each algorithm was applied on our data set. And then the results were analyzed and compared</h4>
+  <h4>To see the performance of the algorithm, you can choose it from dropdown menu below. And then click on show. </h4>
+
+  <form method=post action="">
+    <div class="form-group">
+      <table  >
+        {% for field in Alg_Form %}
+          <tr>
+          <td>{{ field.label }}</td><td>{{ field }}</td>
+
+          </tr>
+        {% endfor %}
+      </table>
+      
+    </div>
+  </form>
+
+  <h4>{{accuracy}}</h4>
+  <h4>{{lead_sentence}}</h4>
+  <br>
+  {% if plots!= None %}
+    {% for plot in plots %}
+      {% for part in plot %}
+        {{part | safe}}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+</div>
+    
+
+{% endblock %}
