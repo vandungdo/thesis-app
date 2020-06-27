@@ -103,7 +103,7 @@ def prediction():
     temp2 = temp2.to_dict('records')
     return render_template('prediction.html',colnames1=columnNames1,records1=temp1,colnames2=columnNames2,records2=temp2,cap1=cap1,cap2=cap2)
 
-@app.route('/')
+@app.route('/',methods=['GET','POST'])
 def welcome():
     return render_template('welcome.html')
 
