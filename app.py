@@ -1,8 +1,8 @@
 from flask import Flask, render_template, redirect, url_for,request
 from clustering import  picture,new_signal_class,picture1,new_df,new_signal_class_time, picture2
-from form import NewLabel, Algorithms
+from form import NewLabel, Algorithms, PredictionAll
 from classification import heatmap
-from prediction import before_predict_table,after_predict_table
+from prediction import before_predict_table,after_predict_table, after_predict_table_all
 import datetime
 import os
 pictureFolder = os.path.join('static','images')
@@ -20,8 +20,6 @@ def clustering():
     newLabelForm = NewLabel(request.form)
 
     if request.method == 'POST' and newLabelForm.validate() and newLabelForm.startTime.data==-1 and newLabelForm.endTime.data==-1 and newLabelForm.label.data!='all labels' and newLabelForm.day.data==datetime.date(2018,8,1):
-        print(newLabelForm.day.data)
-        print(type(newLabelForm.day.data))
         temp1 = new_signal_class(newLabelForm.label.data)
         columnNames1 = temp1.columns.values
         temp1 = temp1.to_dict('records')
@@ -33,8 +31,6 @@ def clustering():
     #     pic1 = []
 
     elif request.method == 'POST' and newLabelForm.validate() and newLabelForm.startTime.data!=-1 and newLabelForm.endTime.data!=-1 and newLabelForm.label.data == 'all labels':
-        print(newLabelForm.day.data)
-        print('with date and time, all labels')
         temp1 = new_signal_class_time(newLabelForm.day.data,newLabelForm.startTime.data,newLabelForm.endTime.data)
         labels = list(temp1.label.unique())
         pic1=picture2(newLabelForm.label.data,newLabelForm.day.data,newLabelForm.startTime.data,newLabelForm.endTime.data)
@@ -45,8 +41,6 @@ def clustering():
         # pic1 = picture1(newLabelForm.label.data)
 
     elif request.method == 'POST' and newLabelForm.validate() and newLabelForm.startTime.data!=-1 and newLabelForm.endTime.data!=-1 and newLabelForm.label.data != 'all labels':
-        print(newLabelForm.day.data)
-        print('with date and time, and label')
         temp1 = new_signal_class_time(newLabelForm.day.data,newLabelForm.startTime.data,newLabelForm.endTime.data)
         temp1 = temp1[temp1.label == newLabelForm.label.data]
         columnNames1 = temp1.columns.values
@@ -90,8 +84,10 @@ def classification():
         plots = []
     return render_template('classification.html',Alg_Form = Alg_Form,accuracy = accuracy,lead_sentence=lead_sentence,plots=plots)
 
-@app.route('/prediction',methods=['GET'])
+@app.route('/prediction',methods=['GET','POST'])
 def prediction():
+
+    
     cap1 = 'Table of signals before prediction'
     temp1 = before_predict_table()
     columnNames1 = temp1.columns.values
@@ -101,7 +97,28 @@ def prediction():
     temp2 = after_predict_table()
     columnNames2 = temp2.columns.values
     temp2 = temp2.to_dict('records')
-    return render_template('prediction.html',colnames1=columnNames1,records1=temp1,colnames2=columnNames2,records2=temp2,cap1=cap1,cap2=cap2)
+
+    
+    return render_template('prediction.html',colnames1=columnNames1,records1=temp1,
+                            colnames2=columnNames2,records2=temp2,cap1=cap1,cap2=cap2
+                            )
+
+@app.route('/prediction_all',methods=['GET','POST'])
+def prediction_all():
+    PredictForm = PredictionAll(request.form)
+    cap_all = 'Result of classification all signals in whole dataset'
+    
+    if request.method == 'POST' and PredictForm.validate():
+        temp_all = after_predict_table_all(PredictForm.day.data,PredictForm.startTime.data,
+                                            PredictForm.endTime.data)
+        columnNames_all = temp_all.columns.values
+        temp_all = temp_all.to_dict('records')
+  
+    else:
+        columnNames_all = []
+        temp_all = {}
+    return render_template('prediction_all.html',PredictForm=PredictForm,
+                            colnames_all=columnNames_all,records_all=temp_all,cap_all=cap_all)
 
 @app.route('/',methods=['GET'])
 def welcome():

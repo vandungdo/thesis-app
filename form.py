@@ -38,3 +38,15 @@ class Algorithms(Form):
 
     label = SelectField(label='Algorithm', choices = [(i,i) for i in ['SVM','Decision Tree','Naive Bayes','Random Forest']],validators=[validators.InputRequired()])
     submit = SubmitField('Show',validators=[validators.required()])
+
+
+class PredictionAll(Form):
+
+    day = DateField('Date',format='%Y-%m-%d',default = datetime.date(2018,8,1))
+    startTime = SelectField(label='Start hour time',choices=[(i,i)for i in time1],default=-1,validators=[validators.InputRequired()],coerce=np.int64)
+    endTime = SelectField(label='End hour time',choices=[(i,i)for i in time2],default=-1,validators=[validators.InputRequired()],coerce=np.int64)
+    submit = SubmitField('Show',validators=[validators.required()])
+
+    def validate_time(form, field):
+        if form.endTime < form.startTime:
+            raise ValidationError('end time must not be earlier than start time')

@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="content">
+    <form method=post action="">
+        <div class="form-group">
+            <table  >
+            {% for field in PredictForm %}
+                <tr>
+                <td>{{ field.label }}</td><td>{{ field }}</td>
+    
+                </tr>
+            {% endfor %}
+            </table>
+            
+        </div>
+    </form>
+
+    <table id="tb_all" class="display" style="width:100%">
+        <caption>{{cap_all}}</caption>
+        <thead>
+            <tr>
+                {% for col in colnames_all %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records_all %}
+            <tr>
+                {% for col in colnames_all %}
+                <td>{{ record[col] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+    <script type="text/javascript">
+        $(document).ready( function () {
+          $('#tb_all').DataTable(
+            {
+              "scrollY":        "400px",
+              "scrollCollapse": true,
+              "paging":         false,
+              "scrollX":        true
+            }
+          );
+        } );
+      </script>
+
+{% endblock %}
