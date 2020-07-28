@@ -4,17 +4,17 @@ import numpy as np
 import datetime
 
 currentPath = os.path.abspath(os.path.dirname(__file__))
-df_before_prediction = pd.read_csv(os.path.join(currentPath,'data/signals_before_prediction.csv'))
-df_after_prediction = pd.read_csv(os.path.join(currentPath,'data/signals_after_prediction.csv'))
+# df_before_prediction = pd.read_csv(os.path.join(currentPath,'data/signals_before_prediction.csv'))
+# df_after_prediction = pd.read_csv(os.path.join(currentPath,'data/signals_after_prediction.csv'))
 df_after_prediction_all = pd.read_csv(os.path.join(currentPath,'data/whole_dataset_with_class.csv'))
 
-def before_predict_table():
-    df = df_before_prediction.copy()
-    return df
+# def before_predict_table():
+#     df = df_before_prediction.copy()
+#     return df
 
-def after_predict_table():
-    df = df_after_prediction.copy()
-    return df
+# def after_predict_table():
+#     df = df_after_prediction.copy()
+#     return df
 
 def after_predict_table_all(day,start,end):
 

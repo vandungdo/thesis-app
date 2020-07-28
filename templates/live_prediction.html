@@ -1,0 +1,92 @@
+{% extends "index.html" %} {% block content %}
+
+<div class="content">
+  <h2>
+    Here you can choose any csv file and use the created classification model to
+    classify the signals.
+  </h2>
+  <p>
+    The process of the prediction will cost a little time because it will re-run
+    the whole process.
+  </p>
+  <ol>
+    <li>
+      Signal identification: Extract signals from csv file with their features.
+    </li>
+    <li>Implement data processing on these signal data.</li>
+    <li>
+      Use the saved model from classification step to classify the signals.
+    </li>
+  </ol>
+
+  <p>
+    Please copy the local path of csv file on your computer in this field and
+    click on predict button.
+  </p>
+  <form method="POST" action="{{url_for('live_prediction')}}">
+    <div class="form-group">
+      <label for="exampleInputEmail1"> <strong>File Path</strong> </label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputEmail1"
+        name="file"
+        aria-describedby="emailHelp"
+        placeholder="/home/data/file.csv "
+      />
+      <small id="emailHelp" class="form-text text-muted"
+        >Please add the completed path (include file name).</small
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="exampleInputEmail1"> <strong>Band</strong> </label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputEmail1"
+        name="band"
+        aria-describedby="emailHelp"
+        placeholder="VHF"
+      />
+      <small id="emailHelp" class="form-text text-muted"
+        >Please enter the frequency band in the file.</small
+      >
+    </div>
+    <button type="submit" class="btn btn-secondary">Prediction</button>
+  </form>
+
+  <table id="tb_live" class="display" style="width: 100%;">
+    <caption>
+      {{cap}}
+    </caption>
+    <thead>
+      <tr>
+        {% for col in colnames %}
+        <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      <tr>
+        {% for col in colnames %}
+        <td>{{ record[col] }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#tb_live").DataTable({
+      scrollY: "400px",
+      scrollCollapse: true,
+      paging: false,
+      scrollX: true,
+    });
+  });
+</script>
+
+{% endblock %}

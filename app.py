@@ -2,7 +2,8 @@ from flask import Flask, render_template, redirect, url_for,request
 from clustering import  picture,new_signal_class,picture1,new_df,new_signal_class_time, picture2
 from form import NewLabel, Algorithms, PredictionAll
 from classification import heatmap
-from prediction import before_predict_table,after_predict_table, after_predict_table_all
+from prediction import after_predict_table_all
+from live_prediction import predict_one_file
 import datetime
 import os
 pictureFolder = os.path.join('static','images')
@@ -84,24 +85,6 @@ def classification():
         plots = []
     return render_template('classification.html',Alg_Form = Alg_Form,accuracy = accuracy,lead_sentence=lead_sentence,plots=plots)
 
-@app.route('/prediction',methods=['GET','POST'])
-def prediction():
-
-    
-    cap1 = 'Table of signals before prediction'
-    temp1 = before_predict_table()
-    columnNames1 = temp1.columns.values
-    temp1 = temp1.to_dict('records')
-
-    cap2 = 'Table of signals after prediction'
-    temp2 = after_predict_table()
-    columnNames2 = temp2.columns.values
-    temp2 = temp2.to_dict('records')
-
-    
-    return render_template('prediction.html',colnames1=columnNames1,records1=temp1,
-                            colnames2=columnNames2,records2=temp2,cap1=cap1,cap2=cap2
-                            )
 
 @app.route('/prediction_all',methods=['GET','POST'])
 def prediction_all():
@@ -119,6 +102,19 @@ def prediction_all():
         temp_all = {}
     return render_template('prediction_all.html',PredictForm=PredictForm,
                             colnames_all=columnNames_all,records_all=temp_all,cap_all=cap_all)
+
+@app.route('/live_prediction',methods=['GET','POST'])
+def live_prediction():
+    if request.method == 'POST':
+        temp = predict_one_file(request.form['file'],request.form.get('band'))
+        columnNames = temp.columns.values
+        temp = temp.to_dict('records')
+        cap = 'Result from live prediction'
+    else:
+        columnNames = []
+        temp = {}
+        cap = ''
+    return render_template('live_prediction.html',colnames = columnNames,records=temp,cap=cap)
 
 @app.route('/',methods=['GET'])
 def welcome():
