@@ -29,4 +29,4 @@ Pillow == 6.2.0
 scikit-learn == 0.23.1
 reverse_geocoder == 1.5.1
 joblib == 0.16.0
-opencv-python == 4.3.0.36
+opencv-python
