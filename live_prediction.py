@@ -23,15 +23,15 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 # get lat, long from database
-df_sample = pd.read_csv('data/marconisstadb_mitCountry.csv')
-# csv data to change the country to regions
-df_regions = pd.read_csv('data/all.csv')
-model = pickle.load(open('data/model.obj', 'rb'))  # prediction model
-enc = load('data/enc.joblib')  # one hot encode
-with open('data/factor.pickle', 'rb') as f:  # factor to exchange class name with the number
-    factor = pickle.load(f)
+# df_sample = pd.read_csv('data/marconisstadb_mitCountry.csv')
+# # csv data to change the country to regions
+# df_regions = pd.read_csv('data/all.csv')
+# model = pickle.load(open('data/model.obj', 'rb'))  # prediction model
+# enc = load('data/enc.joblib')  # one hot encode
+# with open('data/factor.pickle', 'rb') as f:  # factor to exchange class name with the number
+#     factor = pickle.load(f)
 
-im_path = 'data/images/'
+# im_path = 'data/images/'
 
 # getting threshold from boxplot method
 
@@ -47,6 +47,17 @@ def get_threshold_boxplot_method(val):
 
 
 def predict_one_file(file, band):
+    # get lat, long from database
+    df_sample = pd.read_csv('data/marconisstadb_mitCountry.csv')
+    # csv data to change the country to regions
+    df_regions = pd.read_csv('data/all.csv')
+    model = pickle.load(open('data/model.obj', 'rb'))  # prediction model
+    enc = load('data/enc.joblib')  # one hot encode
+    with open('data/factor.pickle', 'rb') as f:  # factor to exchange class name with the number
+        factor = pickle.load(f)
+
+    im_path = 'data/images/'
+
     df = pd.read_csv(file, header=None)
     date_time = []
     form = '%Y-%m-%d %H:%M:%S'
