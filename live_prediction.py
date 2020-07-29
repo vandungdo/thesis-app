@@ -141,6 +141,8 @@ def predict_one_file(file, band):
     df_signals = pd.DataFrame({'start_time': start_time[:-1], 'end_time': end_time[:-1], 'duration[s]': duration[:-1], 'bandwidth[MHz]': bandwidth[:-1], 'signal_power[dB]': signal_power[:-1],
                                'start_bandwidth': start_bandwidth[:-1], 'end_bandwidth': end_bandwidth[:-1]})
 
+    del start_time, end_time, duration, bandwidth, signal_power, start_bandwidth, end_bandwidth
+
     df_signals['origin_band'] = [band]*df_signals.shape[0]
 
     df_signals['peaks_number'] = number_of_peaks[:-1]
@@ -154,6 +156,9 @@ def predict_one_file(file, band):
     df1 = df1.rename(columns={'lat': 'start_lat', 'lon': 'start_lon'})
     df2 = pd.merge(df1, df_sample, left_on='end_time',
                    right_on='timestamp', how='left')
+
+    del df1, df_signals
+
     df2.drop('timestamp', inplace=True, axis=1)
     df2 = df2.rename(columns={'lat': 'end_lat', 'lon': 'end_lon'})
     df2 = df2[df2.peaks_number >= 5]
@@ -173,6 +178,7 @@ def predict_one_file(file, band):
     df2['end_location'] = end_location
 
     df3 = df2.copy()
+    del df2
     df3 = df3.reset_index(inplace=False, drop=True)
     df3.drop(['start_lat', 'start_lon', 'end_lat',
               'end_lon'], inplace=True, axis=1)
@@ -183,7 +189,7 @@ def predict_one_file(file, band):
                       right_on='alpha-2', how='left')
     df_end = pd.merge(df_end, df_reg, left_on='end_location',
                       right_on='alpha-2', how='left')
-
+    del df3
     df_end.drop(['alpha-2_x', 'alpha-2_y'], axis=1, inplace=True)
     df_end = df_end.rename(
         columns={'sub-region_x': 'start_region', 'sub-region_y': 'end_region'})
@@ -192,6 +198,7 @@ def predict_one_file(file, band):
     df_predict.dropna(inplace=True, axis=0)
     df_predict = df_predict[['origin_band', 'start_region', 'end_region', 'duration[s]',
                              'bandwidth[MHz]', 'signal_power[dB]', 'peaks_number', 'max_gradient']]
+
     v = df_predict.values[:, 0:3]
     v = enc.transform(v).toarray()
     v1 = df_predict.values[:, 3:]
@@ -203,8 +210,11 @@ def predict_one_file(file, band):
     labels = factor[0]
     reversefactor = dict(zip(range(len(definitions)), definitions))
     y_pred_reversed = np.vectorize(reversefactor.get)(y_pred)
+
+    del df_predict
+
     df_end['label'] = y_pred_reversed
-    df_end = df_end[['label', 'origin_band', 'start_region', 'end_region', 'duration[s]',
+    df_end = df_end[['label', 'start_time', 'end_time', 'origin_band', 'start_region', 'end_region', 'duration[s]',
                      'bandwidth[MHz]', 'start_bandwidth', 'end_bandwidth', 'signal_power[dB]', 'peaks_number', 'max_gradient']]
 
     files = os.listdir(im_path)
