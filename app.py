@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
+from werkzeug import secure_filename
 from clustering import picture, new_signal_class, picture1, new_df, new_signal_class_time, picture2
 from form import NewLabel, Algorithms, PredictionAll
 from classification import heatmap
@@ -6,10 +7,10 @@ from prediction import after_predict_table_all
 from live_prediction import predict_one_file
 import datetime
 import os
-pictureFolder = os.path.join('static', 'images')
+up = os.path.join('static', 'upload')
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = pictureFolder
+app.config['UPLOAD_FOLDER'] = up
 
 
 @app.route('/identification', methods=['GET'])
@@ -117,14 +118,20 @@ def prediction_all():
 @app.route('/live_prediction', methods=['GET', 'POST'])
 def live_prediction():
     if request.method == 'POST':
-        temp = predict_one_file(request.form['file'], request.form.get('band'))
+        f = request.files['file']
+        filename = secure_filename(f.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        f.save(file_path)
+
+        temp = predict_one_file(file_path, request.form.get('band'))
         columnNames = temp.columns.values
         temp = temp.to_dict('records')
-        cap = 'Result from live prediction for the file '+request.form['file']
+        cap = 'Result from live prediction for the file '+filename
     else:
         columnNames = []
         temp = {}
         cap = ''
+        f = ''
     return render_template('live_prediction.html', colnames=columnNames, records=temp, cap=cap)
 
 

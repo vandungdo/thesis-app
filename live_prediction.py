@@ -208,7 +208,10 @@ def predict_one_file(file, band):
                      'bandwidth[MHz]', 'start_bandwidth', 'end_bandwidth', 'signal_power[dB]', 'peaks_number', 'max_gradient']]
 
     files = os.listdir(im_path)
+    dataFiles = os.listdir('static/upload/')
     for f in files:
         os.remove(os.path.join(im_path, f))
+    for d in dataFiles:
+        os.remove(os.path.join('static/upload/', d))
 
     return df_end

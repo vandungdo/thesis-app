@@ -20,22 +20,25 @@
   </ol>
 
   <p>
-    Please copy the local path of csv file on your computer in this field and
-    click on predict button.
+    Please upload the csv data file here
   </p>
-  <form method="POST" action="{{url_for('live_prediction')}}">
+  <form
+    method="POST"
+    action="{{url_for('live_prediction')}}"
+    enctype="multipart/form-data"
+  >
     <div class="form-group">
-      <label for="exampleInputEmail1"> <strong>File Path</strong> </label>
+      <label for="exampleInputEmail1"> <strong>File</strong> </label>
       <input
-        type="text"
+        type="file"
         class="form-control"
         id="exampleInputEmail1"
         name="file"
         aria-describedby="emailHelp"
-        placeholder="/home/data/file.csv "
+        placeholder="file.csv "
       />
       <small id="emailHelp" class="form-text text-muted"
-        >Please add the completed path (include file name).</small
+        >Please upload csv file here.</small
       >
     </div>
 
