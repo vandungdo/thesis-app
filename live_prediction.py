@@ -163,17 +163,32 @@ def predict_one_file(file, band):
     df2 = df2.rename(columns={'lat': 'end_lat', 'lon': 'end_lon'})
     df2 = df2[df2.peaks_number >= 5]
 
+    # start_location = []
+    # end_location = []
+    # for i in df2.index:
+    #     try:
+    #         a = revgc.search((df2.start_lat[i], df2.start_lon[i]))
+    #         b = revgc.search((df2.end_lat[i], df2.end_lon[i]))
+    #         start_location.append(a[0]['cc'])
+    #         end_location.append(b[0]['cc'])
+    #     except:
+    #         start_location.append(np.nan)
+    #         end_location.append(np.nan)
+
+    start = df2[['start_lat', 'start_lon']].apply(tuple, axis=1)
+    start = tuple(start)
+    start_dict = revgc.search(start)
     start_location = []
+    for i in start_dict:
+        start_location.append(i['cc'])
+
+    end = df2[['end_lat', 'end_lon']].apply(tuple, axis=1)
+    end = tuple(end)
+    end_dict = revgc.search(end)
     end_location = []
-    for i in df2.index:
-        try:
-            a = revgc.search((df2.start_lat[i], df2.start_lon[i]))
-            b = revgc.search((df2.end_lat[i], df2.end_lon[i]))
-            start_location.append(a[0]['cc'])
-            end_location.append(b[0]['cc'])
-        except:
-            start_location.append(np.nan)
-            end_location.append(np.nan)
+    for i in end_dict:
+        end_location.append(i['cc'])
+
     df2['start_location'] = start_location
     df2['end_location'] = end_location
 
