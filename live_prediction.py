@@ -6,7 +6,7 @@ import datetime
 from scipy.signal import find_peaks
 from sklearn.preprocessing import normalize
 import math
-import reverse_geocoder as revgc
+# import reverse_geocoder as revgc
 from joblib import dump, load
 import pickle
 import os
@@ -22,7 +22,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 
 
-df_sample = pd.read_csv('data/maconisstadb.csv')  # get lat, long from database
+# get lat, long from database
+df_sample = pd.read_csv('data/marconisstadb_mitCountry.csv')
 # csv data to change the country to regions
 df_regions = pd.read_csv('data/all.csv')
 model = pickle.load(open('data/model.obj', 'rb'))  # prediction model
@@ -152,15 +153,22 @@ def predict_one_file(file, band):
         df_sample['timestamp'], format='%Y-%m-%d %H:%M:%S')
     df1 = pd.merge(df_signals, df_sample, left_on='start_time',
                    right_on='timestamp', how='left')
+
+    df1 = df1.rename(columns={'country': 'start_location'})
+    df1 = pd.merge(df_signals, df_sample, left_on='end_time',
+                   right_on='timestamp', how='left')
+    df1 = df1.rename(columns={'country': 'start_location'})
     df1.drop('timestamp', inplace=True, axis=1)
-    df1 = df1.rename(columns={'lat': 'start_lat', 'lon': 'start_lon'})
+
     df2 = pd.merge(df1, df_sample, left_on='end_time',
                    right_on='timestamp', how='left')
+
+    df2 = df2.rename(columns={'country': 'end_location'})
 
     del df1, df_signals
 
     df2.drop('timestamp', inplace=True, axis=1)
-    df2 = df2.rename(columns={'lat': 'end_lat', 'lon': 'end_lon'})
+    # df2 = df2.rename(columns={'lat': 'end_lat', 'lon': 'end_lon'})
     df2 = df2[df2.peaks_number >= 5]
 
     # start_location = []
@@ -175,28 +183,28 @@ def predict_one_file(file, band):
     #         start_location.append(np.nan)
     #         end_location.append(np.nan)
 
-    start = df2[['start_lat', 'start_lon']].apply(tuple, axis=1)
-    start = tuple(start)
-    start_dict = revgc.search(start)
-    start_location = []
-    for i in start_dict:
-        start_location.append(i['cc'])
+    # start = df2[['start_lat', 'start_lon']].apply(tuple, axis=1)
+    # start = tuple(start)
+    # start_dict = revgc.search(start)
+    # start_location = []
+    # for i in start_dict:
+    #     start_location.append(i['cc'])
 
-    end = df2[['end_lat', 'end_lon']].apply(tuple, axis=1)
-    end = tuple(end)
-    end_dict = revgc.search(end)
-    end_location = []
-    for i in end_dict:
-        end_location.append(i['cc'])
+    # end = df2[['end_lat', 'end_lon']].apply(tuple, axis=1)
+    # end = tuple(end)
+    # end_dict = revgc.search(end)
+    # end_location = []
+    # for i in end_dict:
+    #     end_location.append(i['cc'])
 
-    df2['start_location'] = start_location
-    df2['end_location'] = end_location
+    # df2['start_location'] = start_location
+    # df2['end_location'] = end_location
 
     df3 = df2.copy()
     del df2
     df3 = df3.reset_index(inplace=False, drop=True)
-    df3.drop(['start_lat', 'start_lon', 'end_lat',
-              'end_lon'], inplace=True, axis=1)
+    # df3.drop(['start_lat', 'start_lon', 'end_lat',
+    #           'end_lon'], inplace=True, axis=1)
 
     df_reg = df_regions[['alpha-2', 'sub-region']]
     df_reg = df_reg.dropna(axis=0)
